@@ -34,7 +34,8 @@ function presentIPPrompt() {
     {
       name: "IP",
       id: "input-ip",
-      type: "url"
+      value: ip,
+      type: "text"
     }
   ];
   alert.buttons = [
@@ -66,16 +67,16 @@ document.addEventListener("DOMContentLoaded", connectWebsocket);
 function connectWebsocket() {
   try {
     let ip = localStorage.getItem("ip");
-    if(ip.trim().length<7){
+    if (ip.trim().length < 7) {
       presentIPPrompt();
-    }else{
+    } else {
       ip = localStorage.getItem("ip");
       ws = new WebSocket("ws://" + ip + ":6789");
     }
   } catch (e) {
     console.log(e);
   } finally {
-    console.log(ws.readyState);
+    //console.log(ws.readyState);
   }
 }
 
@@ -127,14 +128,11 @@ addFavBtn.addEventListener("click", addFav);
 applyBtn.addEventListener("click", applyPreview);
 previewCanvas.addEventListener("click", applyPreview);
 
-function addFav(){
+function addFav() {
   const item = document.createElement("ion-item");
-  item.textContent = getManualColor();
+  item.innerHTML = `<div class="item-fav" style="background-color:${getManualColor()}" onclick="sendStaticColor(${getManualColor()})"></div>`;
   item.button = true;
-  item.addEventListener("click",() =>{
-    sendStaticColor(item.textContent);
-  });
-
+  item.style.background = getManualColor();
   favList.appendChild(item);
   console.log(item);
 }
@@ -146,7 +144,7 @@ function applyPreview() {
 function sendStaticColor(color) {
   ws.send(
     JSON.stringify({
-      name: "bed",
+      name: led,
       type: "static",
       color: getManualColor().substring(1, 7)
     })
@@ -163,18 +161,72 @@ const circleBreathBtn = document.querySelector("#btn-circlebreath");
 const stopBtn = document.querySelector("#btn-stop");
 const speedInput = document.querySelector("#input-speed");
 
-randomBtn.addEventListener("click",() =>{sendAnimation("random");});
-breathBtn.addEventListener("click",() =>{sendAnimation("breathing");});
-circleBtn.addEventListener("click",() =>{sendAnimation("colorcircle");});
-rndBreathBtn.addEventListener("click",() =>{sendAnimation("randombreathing");});
-circleBreathBtn.addEventListener("click",() =>{sendAnimation("colorcirclebreathing");});
-stopBtn.addEventListener("click",() =>{sendAnimation("stop");});
+randomBtn.addEventListener("click", () => {
+  sendAnimation("random");
+});
+breathBtn.addEventListener("click", () => {
+  sendAnimation("breathing");
+});
+circleBtn.addEventListener("click", () => {
+  sendAnimation("colorcircle");
+});
+rndBreathBtn.addEventListener("click", () => {
+  sendAnimation("randombreathing");
+});
+circleBreathBtn.addEventListener("click", () => {
+  sendAnimation("colorcirclebreathing");
+});
+stopBtn.addEventListener("click", () => {
+  sendAnimation("stop");
+});
 
-function sendAnimation(animationType){
-	const speed = speedInput.value;
-	const led = "bed" //document.getElementById("selectLed").value;
-	ws.send(JSON.stringify({"name":led,
-							"type":"animation",
-							"animationType":animationType,
-							"animationSpeed":speed}));
+function sendAnimation(animationType) {
+  const speed = speedInput.value;
+  ws.send(
+    JSON.stringify({
+      name: led,
+      type: "animation",
+      animationType: animationType,
+      animationSpeed: speed
+    })
+  );
+}
+
+// led picker
+let led = "all";
+
+async function presentActionSheet() {
+  const actionSheet = document.createElement("ion-action-sheet");
+
+  actionSheet.header = "LEDs";
+  actionSheet.buttons = [
+    {
+      text: "all",
+      icon: "bulb",
+      handler: () => {
+        led = "all";
+      }
+    },
+    {
+      text: "bed",
+      icon: "bulb",
+      handler: () => {
+        led = "bed";
+      }
+    },
+    {
+      text: "desk",
+      icon: "bulb",
+      handler: () => {
+        led = "desk";
+      }
+    },
+    {
+      text: "Cancel",
+      icon: "close",
+      role: "cancel"
+    }
+  ];
+  document.body.appendChild(actionSheet);
+  return actionSheet.present();
 }

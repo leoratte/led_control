@@ -196,3 +196,6 @@ canvas{
 #animation-list{
   text-align: center;
 }
+.ion-item{
+  background-color: red;
+}

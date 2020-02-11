@@ -22,6 +22,7 @@
   </head>
   <body>
     <ion-app>
+      
       <ion-tabs>
         <ion-menu side="start">
           <ion-header>
@@ -44,13 +45,16 @@
           </ion-content>
         </ion-menu>
 
-        <ion-tab tab="tab-color">
+        <ion-tab tab="tab-color" main>
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
                 <ion-menu-button></ion-menu-button>
               </ion-buttons>
               <ion-title>Color</ion-title>
+              <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
+                <ion-icon name="bulb" size="large"></ion-icon>
+              </ion-buttons>
             </ion-toolbar>
           </ion-header>
           <ion-content>
@@ -112,11 +116,11 @@
                       <canvas id="canvas-preview"></canvas>
                     </ion-item>
                     <ion-item>
-                      <ion-button id="btn-addfav" margin>
+                      <ion-button id="btn-addfav" size="default">
                         <ion-icon slot="start" name="add"></ion-icon>
                         Add to favorite
                       </ion-button>
-                      <ion-button id="btn-apply" margin>
+                      <ion-button id="btn-apply" size="default">
                         <ion-icon slot="start" name="eye"></ion-icon>Apply
                       </ion-button>
                     </ion-item>
@@ -127,13 +131,16 @@
           </ion-content>
         </ion-tab>
 
-        <ion-tab tab="tab-favorite" main>
+        <ion-tab tab="tab-favorite">
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
                 <ion-menu-button></ion-menu-button>
               </ion-buttons>
               <ion-title>Favorite</ion-title>
+              <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
+                <ion-icon name="bulb" size="large"></ion-icon>
+              </ion-buttons>
             </ion-toolbar>
           </ion-header>
           <ion-content>
@@ -154,6 +161,9 @@
                 <ion-menu-button></ion-menu-button>
               </ion-buttons>
               <ion-title>Animation</ion-title>
+              <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
+                <ion-icon name="bulb" size="large"></ion-icon>
+              </ion-buttons>
             </ion-toolbar>
           </ion-header>
           <ion-content>
@@ -223,9 +233,9 @@
           </ion-tab-button>
         </ion-tab-bar>
       </ion-tabs>
+      <ion-menu-controller></ion-menu-controller>
+      <ion-alert-controller></ion-alert-controller>
     </ion-app>
-    <ion-menu-controller></ion-menu-controller>
-    <ion-alert-controller></ion-alert-controller>
     <script src="script.js"></script>
   </body>
 </html>
