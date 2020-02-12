@@ -130,11 +130,14 @@ previewCanvas.addEventListener("click", applyPreview);
 
 function addFav() {
   const item = document.createElement("ion-item");
-  item.innerHTML = `<div class="item-fav" style="background-color:${getManualColor()}" onclick="sendStaticColor(${getManualColor()})"></div>`;
+  item.setAttribute("onclick", `sendStaticColor("${getManualColor()}")`);
   item.button = true;
-  item.style.background = getManualColor();
+  item.style = `--background: ${getManualColor()}`;
   favList.appendChild(item);
-  console.log(item);
+}
+
+function favTest(){
+  console.log("tstr");
 }
 
 function applyPreview() {
