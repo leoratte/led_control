@@ -1,3 +1,13 @@
+// stuff to improve storage
+Storage.prototype.setObj = function(key, obj) {
+  return this.setItem(key, JSON.stringify(obj))
+}
+Storage.prototype.getObj = function(key) {
+  return JSON.parse(this.getItem(key))
+}
+
+// darkmode stuff
+
 // Query for the toggle that is used to change between themes
 const toggle = document.querySelector("#toggle-darkmode");
 
@@ -67,7 +77,7 @@ document.addEventListener("DOMContentLoaded", connectWebsocket);
 function connectWebsocket() {
   try {
     let ip = localStorage.getItem("ip");
-    if (ip.trim().length < 7) {
+    if (ip==null || ip.trim().length < 7) {
       presentIPPrompt();
     } else {
       ip = localStorage.getItem("ip");
@@ -119,26 +129,10 @@ function rgbToHex(rgb) {
   return ret;
 }
 
-// addFav, send static color
-const addFavBtn = document.querySelector("#btn-addfav");
+// send static color
 const applyBtn = document.querySelector("#btn-apply");
-const favList = document.querySelector("#list-fav");
-
-addFavBtn.addEventListener("click", addFav);
 applyBtn.addEventListener("click", applyPreview);
 previewCanvas.addEventListener("click", applyPreview);
-
-function addFav() {
-  const item = document.createElement("ion-item");
-  item.setAttribute("onclick", `sendStaticColor("${getManualColor()}")`);
-  item.button = true;
-  item.style = `--background: ${getManualColor()}`;
-  favList.appendChild(item);
-}
-
-function favTest(){
-  console.log("tstr");
-}
 
 function applyPreview() {
   sendStaticColor(getManualColor());
@@ -154,8 +148,50 @@ function sendStaticColor(color) {
   );
 }
 
-// animation
 
+// add, reorder fav
+const addFavBtn = document.querySelector("#btn-addfav");
+const favListColor = document.querySelector("#list-fav-color");
+addFavBtn.addEventListener("click", addFavPreview);
+
+const favColorList = [];
+document.addEventListener("DOMContentLoaded", loadFav);
+
+function addFavPreview(){
+  const color = getManualColor();
+  addFav(color);
+}
+
+function addFav(color) {
+  const item = document.createElement("ion-item");
+  item.setAttribute("onclick", `sendStaticColor("${color}")`);
+  item.button = true;
+  item.style = `--background: ${color}`;
+  const reorder = document.createElement("ion-reorder");
+  reorder.slot = "end";
+  item.appendChild(reorder);
+  favListColor.appendChild(item);
+  favColorList.push(color);
+  localStorage.setObj("favColorList", favColorList);
+}
+
+function toggleReorder() {
+  favListColor.disabled = !favListColor.disabled;
+  favListColor.addEventListener('ionItemReorder', ({detail}) => {
+    detail.complete(true);
+  });
+}
+
+function loadFav(){
+  const list = localStorage.getObj("favColorList");
+  if(list!= null){
+    for(let i=0; i<list.length; i++){
+      addFav(list[i]);
+    }
+  }
+}
+
+// animation
 const randomBtn = document.querySelector("#btn-random");
 const breathBtn = document.querySelector("#btn-breath");
 const circleBtn = document.querySelector("#btn-circle");

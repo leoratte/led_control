@@ -1,241 +1,198 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Led Control
-    </title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <script
-      type="module"
-      src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.esm.js"
-    ></script>
-    <script
-      nomodule=""
-      src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.js"
-    ></script>
-  </head>
-  <body>
-    <ion-app>
-      
-      <ion-tabs>
-        <ion-menu side="start">
-          <ion-header>
-            <ion-toolbar translucent>
-              <ion-title>Menu</ion-title>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content>
-            <ion-list>
-              <ion-item id="btn-ip" button>
-                <ion-icon name="globe" slot="start"></ion-icon>
-                <ion-label>IP</ion-label>
-              </ion-item>
-              <ion-item>
-                <ion-icon name="moon" slot="start"></ion-icon>
-                <ion-label>darkmode</ion-label>
-                <ion-toggle id="toggle-darkmode"></ion-toggle>
-              </ion-item>
-            </ion-list>
-          </ion-content>
-        </ion-menu>
 
-        <ion-tab tab="tab-color" main>
-          <ion-header>
-            <ion-toolbar>
-              <ion-buttons slot="start">
-                <ion-menu-button></ion-menu-button>
-              </ion-buttons>
-              <ion-title>Color</ion-title>
-              <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
-                <ion-icon name="bulb" size="large"></ion-icon>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col size-md="6" offset-md="3">
-                  <ion-list lines="none">
-                    <ion-item>
-                      <ion-range
-                        id="input-red"
-                        min="0"
-                        max="255"
-                        step="1"
-                        value="255"
-                        color="red"
-                      ></ion-range>
-                    </ion-item>
-                    <ion-item>
-                      <ion-range
-                        id="input-green"
-                        min="0"
-                        max="255"
-                        step="1"
-                        value="255"
-                        color="green"
-                      ></ion-range>
-                    </ion-item>
-                    <ion-item>
-                      <ion-range
-                        id="input-blue"
-                        min="0"
-                        max="255"
-                        step="1"
-                        value="255"
-                        color="blue"
-                      ></ion-range>
-                    </ion-item>
-                    <ion-item>
-                      <ion-range
-                        id="input-brightness"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value="1"
-                      >
-                        <ion-icon
-                          size="small"
-                          slot="start"
-                          name="sunny"
-                        ></ion-icon>
-                        <ion-icon
-                          size="large"
-                          slot="end"
-                          name="sunny"
-                        ></ion-icon>
-                      </ion-range>
-                    </ion-item>
-                    <ion-item>
-                      <canvas id="canvas-preview"></canvas>
-                    </ion-item>
-                    <ion-item>
-                      <ion-button id="btn-addfav" size="default">
-                        <ion-icon slot="start" name="add"></ion-icon>
-                        Add to favorite
-                      </ion-button>
-                      <ion-button id="btn-apply" size="default">
-                        <ion-icon slot="start" name="eye"></ion-icon>Apply
-                      </ion-button>
-                    </ion-item>
-                  </ion-list>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-content>
-        </ion-tab>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    Led Control
+  </title>
+  <link rel="stylesheet" href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.esm.js"></script>
+  <script nomodule="" src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.js"></script>
+</head>
 
-        <ion-tab tab="tab-favorite">
-          <ion-header>
-            <ion-toolbar>
-              <ion-buttons slot="start">
-                <ion-menu-button></ion-menu-button>
-              </ion-buttons>
-              <ion-title>Favorite</ion-title>
-              <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
-                <ion-icon name="bulb" size="large"></ion-icon>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col size-md="6" offset-md="3">
-                  <ion-list id="list-fav" lines="none"> </ion-list>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-content>
-        </ion-tab>
+<body>
+  <ion-app>
 
-        <ion-tab tab="tab-animation">
-          <ion-header>
-            <ion-toolbar>
-              <ion-buttons slot="start">
-                <ion-menu-button></ion-menu-button>
-              </ion-buttons>
-              <ion-title>Animation</ion-title>
-              <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
-                <ion-icon name="bulb" size="large"></ion-icon>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col size-md="6" offset-md="3">
-                  <ion-list id="list-animation" lines="none">
-                    <ion-item button text-center id="btn-random">
-                      <ion-label>Random</ion-label>
-                    </ion-item>
-                    <ion-item button text-center id="btn-breath">
-                      <ion-label>Breathing</ion-label>
-                    </ion-item>
-                    <ion-item button text-center id="btn-circle">
-                      <ion-label>Colorcircle</ion-label>
-                    </ion-item>
-                    <ion-item button text-center id="btn-rndbreath">
-                      <ion-label>RandomBreathing</ion-label>
-                    </ion-item>
-                    <ion-item button text-center id="btn-circlebreath">
-                      <ion-label>ColorcycleBreathing</ion-label>
-                    </ion-item>
-                    <ion-item button text-center id="btn-stop">
-                      <ion-label>Stop</ion-label>
-                    </ion-item>
-                    <ion-item>
-                      <ion-range
-                        id="input-speed"
-                        min="0.1"
-                        max="10"
-                        step="0.1"
-                        value="1"
-                      >
-                        <ion-icon
-                          size="small"
-                          slot="start"
-                          name="speedometer"
-                        ></ion-icon>
-                        <ion-icon
-                          size="large"
-                          slot="end"
-                          name="speedometer"
-                        ></ion-icon>
-                      </ion-range>
-                    </ion-item>
-                  </ion-list>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-content>
-        </ion-tab>
+    <ion-tabs>
+      <ion-menu side="start">
+        <ion-header>
+          <ion-toolbar translucent>
+            <ion-title>Menu</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-list>
+            <ion-item id="btn-ip" button>
+              <ion-icon name="globe" slot="start"></ion-icon>
+              <ion-label>IP</ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-icon name="moon" slot="start"></ion-icon>
+              <ion-label>darkmode</ion-label>
+              <ion-toggle id="toggle-darkmode"></ion-toggle>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-menu>
 
-        <ion-tab-bar slot="bottom">
-          <ion-tab-button tab="tab-color">
-            <ion-icon name="color-palette" size="large"></ion-icon>
-            <ion-label>Color</ion-label>
-          </ion-tab-button>
+      <ion-tab tab="tab-color" main>
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+            <ion-title>Color</ion-title>
+            <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
+              <ion-icon name="bulb" size="large"></ion-icon>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size-md="6" offset-md="3">
+                <ion-list lines="none">
+                  <ion-item>
+                    <ion-range id="input-red" min="0" max="255" step="1" value="255" color="red"></ion-range>
+                  </ion-item>
+                  <ion-item>
+                    <ion-range id="input-green" min="0" max="255" step="1" value="255" color="green"></ion-range>
+                  </ion-item>
+                  <ion-item>
+                    <ion-range id="input-blue" min="0" max="255" step="1" value="255" color="blue"></ion-range>
+                  </ion-item>
+                  <ion-item>
+                    <ion-range id="input-brightness" min="0" max="1" step="0.01" value="1">
+                      <ion-icon size="small" slot="start" name="sunny"></ion-icon>
+                      <ion-icon size="large" slot="end" name="sunny"></ion-icon>
+                    </ion-range>
+                  </ion-item>
+                  <ion-item>
+                    <canvas id="canvas-preview"></canvas>
+                  </ion-item>
+                  <ion-item>
+                    <ion-button id="btn-addfav" size="default">
+                      <ion-icon slot="start" name="add"></ion-icon>
+                      Add to favorite
+                    </ion-button>
+                    <ion-button id="btn-apply" size="default">
+                      <ion-icon slot="start" name="eye"></ion-icon>Apply
+                    </ion-button>
+                  </ion-item>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-content>
+      </ion-tab>
 
-          <ion-tab-button tab="tab-favorite">
-            <ion-icon name="star" size="large"></ion-icon>
-            <ion-label>Favorite</ion-label>
-          </ion-tab-button>
+      <ion-tab tab="tab-favorite">
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+            <ion-title>Favorite</ion-title>
+            <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
+              <ion-icon name="bulb" size="large"></ion-icon>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size-md="6" offset-md="3">
+                <ion-list lines="none">
+                  <ion-list-header>
+                    <ion-title>Favorite Colors</ion-title>
+                    <ion-button onclick="toggleReorder()">Reorder</ion-button>
+                  </ion-list-header>
+                  <ion-reorder-group id="list-fav-color"></ion-reorder-group>
+                </ion-list>
+                <ion-list lines="none">
+                  <ion-list-header>
+                    <ion-title>Favorite Animations</ion-title>
+                  </ion-list-header>
+                  <ion-reorder-group id="list-fav-animation"></ion-reorder-group>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-content>
+      </ion-tab>
 
-          <ion-tab-button tab="tab-animation">
-            <ion-icon name="flash" size="large"></ion-icon>
-            <ion-label>Animation</ion-label>
-          </ion-tab-button>
-        </ion-tab-bar>
-      </ion-tabs>
-      <ion-menu-controller></ion-menu-controller>
-      <ion-alert-controller></ion-alert-controller>
-    </ion-app>
-    <script src="script.js"></script>
-  </body>
+      <ion-tab tab="tab-animation">
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+            <ion-title>Animation</ion-title>
+            <ion-buttons slot="end" id="btn-led" onclick="presentActionSheet()" margin>
+              <ion-icon name="bulb" size="large"></ion-icon>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size-md="6" offset-md="3">
+                <ion-list id="list-animation" lines="none">
+                  <ion-item button text-center id="btn-random">
+                    <ion-label>Random</ion-label>
+                  </ion-item>
+                  <ion-item button text-center id="btn-breath">
+                    <ion-label>Breathing</ion-label>
+                  </ion-item>
+                  <ion-item button text-center id="btn-circle">
+                    <ion-label>Colorcircle</ion-label>
+                  </ion-item>
+                  <ion-item button text-center id="btn-rndbreath">
+                    <ion-label>RandomBreathing</ion-label>
+                  </ion-item>
+                  <ion-item button text-center id="btn-circlebreath">
+                    <ion-label>ColorcycleBreathing</ion-label>
+                  </ion-item>
+                  <ion-item button text-center id="btn-stop">
+                    <ion-label>Stop</ion-label>
+                  </ion-item>
+                  <ion-item>
+                    <ion-range id="input-speed" min="0.1" max="10" step="0.1" value="1">
+                      <ion-icon size="small" slot="start" name="speedometer"></ion-icon>
+                      <ion-icon size="large" slot="end" name="speedometer"></ion-icon>
+                    </ion-range>
+                  </ion-item>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-content>
+      </ion-tab>
+
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="tab-color">
+          <ion-icon name="color-palette" size="large"></ion-icon>
+          <ion-label>Color</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="tab-favorite">
+          <ion-icon name="star" size="large"></ion-icon>
+          <ion-label>Favorite</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="tab-animation">
+          <ion-icon name="flash" size="large"></ion-icon>
+          <ion-label>Animation</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+    <ion-menu-controller></ion-menu-controller>
+    <ion-alert-controller></ion-alert-controller>
+  </ion-app>
+  <script src="script.js"></script>
+</body>
+
 </html>

@@ -193,9 +193,9 @@ canvas{
     width: 100%;
 }
 
-/* ion-item{
-  text-align: center;
-} */
+#list-fav-color ion-item{
+  margin: 10px auto;
+}
 
 #list-animation ion-item{
   text-align: center;
