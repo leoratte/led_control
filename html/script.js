@@ -143,7 +143,7 @@ function sendStaticColor(color) {
     JSON.stringify({
       name: led,
       type: "static",
-      color: getManualColor().substring(1, 7)
+      color: color.substring(1, 7)
     })
   );
 }
