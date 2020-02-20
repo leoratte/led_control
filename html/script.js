@@ -1,10 +1,10 @@
 // stuff to improve storage
 Storage.prototype.setObj = function(key, obj) {
-  return this.setItem(key, JSON.stringify(obj))
-}
+  return this.setItem(key, JSON.stringify(obj));
+};
 Storage.prototype.getObj = function(key) {
-  return JSON.parse(this.getItem(key))
-}
+  return JSON.parse(this.getItem(key));
+};
 
 // darkmode stuff
 
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", connectWebsocket);
 function connectWebsocket() {
   try {
     let ip = localStorage.getItem("ip");
-    if (ip==null || ip.trim().length < 7) {
+    if (ip == null || ip.trim().length < 7) {
       presentIPPrompt();
     } else {
       ip = localStorage.getItem("ip");
@@ -148,7 +148,6 @@ function sendStaticColor(color) {
   );
 }
 
-
 // add, reorder fav
 const addFavBtn = document.querySelector("#btn-addfav");
 const favListColor = document.querySelector("#list-fav-color");
@@ -157,7 +156,7 @@ addFavBtn.addEventListener("click", addFavPreview);
 const favColorList = [];
 document.addEventListener("DOMContentLoaded", loadFav);
 
-function addFavPreview(){
+function addFavPreview() {
   const color = getManualColor();
   addFav(color);
 }
@@ -177,15 +176,15 @@ function addFav(color) {
 
 function toggleReorder() {
   favListColor.disabled = !favListColor.disabled;
-  favListColor.addEventListener('ionItemReorder', ({detail}) => {
+  favListColor.addEventListener("ionItemReorder", ({ detail }) => {
     detail.complete(true);
   });
 }
 
-function loadFav(){
+function loadFav() {
   const list = localStorage.getObj("favColorList");
-  if(list!= null){
-    for(let i=0; i<list.length; i++){
+  if (list != null) {
+    for (let i = 0; i < list.length; i++) {
       addFav(list[i]);
     }
   }
@@ -269,3 +268,9 @@ async function presentActionSheet() {
   document.body.appendChild(actionSheet);
   return actionSheet.present();
 }
+
+// default tab
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelector("#tabs");
+  tabs.select("tab-favorite");
+});

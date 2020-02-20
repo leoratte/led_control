@@ -189,14 +189,14 @@ ion-item {
   --transition: none;
 }
 
-canvas{
-    width: 100%;
+canvas {
+  width: 100%;
 }
 
-#list-fav-color ion-item{
+#list-fav-color ion-item {
   margin: 10px auto;
 }
 
-#list-animation ion-item{
+#list-animation ion-item {
   text-align: center;
 }
