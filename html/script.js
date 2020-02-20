@@ -150,7 +150,7 @@ function sendStaticColor(color) {
 
 // add, reorder fav
 const addFavBtn = document.querySelector("#btn-addfav");
-const favListColor = document.querySelector("#list-fav-color");
+const favListColor = document.querySelector("#reorder-fav-color");
 addFavBtn.addEventListener("click", addFavPreview);
 
 const favColorList = [];
@@ -162,21 +162,40 @@ function addFavPreview() {
 }
 
 function addFav(color) {
-  const item = document.createElement("ion-item");
-  item.setAttribute("onclick", `sendStaticColor("${color}")`);
-  item.button = true;
-  item.style = `--background: ${color}`;
-  const reorder = document.createElement("ion-reorder");
-  reorder.slot = "end";
-  item.appendChild(reorder);
-  favListColor.appendChild(item);
-  favColorList.push(color);
-  localStorage.setObj("favColorList", favColorList);
+  if (!favColorList.includes(color)) {
+    const sliding = document.createElement("ion-item-sliding");
+    // sliding.setAttribute("onclick", `sendStaticColor("${color}")`);
+
+    const options = document.createElement("ion-item-options");
+    options.side = "end";
+
+    const option = document.createElement("ion-item-option");
+    option.color = "danger";
+    option.setAttribute("onclick", `removeFavColor(this, "${color}")`);
+    option.innerText = "Remove";
+    options.appendChild(option);
+    sliding.appendChild(options);
+
+    const item = document.createElement("ion-item");
+    item.setAttribute("onclick", `sendStaticColor("${color}")`);
+    item.button = true;
+    item.style = `--background: ${color}`;
+
+    const reorder = document.createElement("ion-reorder");
+    reorder.slot = "end";
+    item.appendChild(reorder);
+    sliding.appendChild(item);
+    favListColor.appendChild(sliding);
+
+    favColorList.push(color);
+    localStorage.setObj("favColorList", favColorList);
+  }
 }
 
 function toggleReorder() {
-  favListColor.disabled = !favListColor.disabled;
-  favListColor.addEventListener("ionItemReorder", ({ detail }) => {
+  const reorderFavColor = document.querySelector("#reorder-fav-color");
+  reorderFavColor.disabled = !reorderFavColor.disabled;
+  reorderFavColor.addEventListener("ionItemReorder", ({ detail }) => {
     detail.complete(true);
   });
 }
@@ -188,6 +207,13 @@ function loadFav() {
       addFav(list[i]);
     }
   }
+}
+
+function removeFavColor(item, color){
+  favColorList.splice(favColorList.indexOf(color),1);
+  localStorage.setObj("favColorList", favColorList);
+  item.parentElement.parentElement.remove();
+
 }
 
 // animation

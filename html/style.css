@@ -193,7 +193,7 @@ canvas {
   width: 100%;
 }
 
-#list-fav-color ion-item {
+#list-fav-color ion-item-sliding {
   margin: 10px auto;
 }
 
