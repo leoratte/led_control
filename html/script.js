@@ -148,7 +148,7 @@ function sendStaticColor(color) {
   );
 }
 
-// add, reorder fav
+// add, remove and reorder fav color
 const addFavBtn = document.querySelector("#btn-addfav");
 const favListColor = document.querySelector("#reorder-fav-color");
 addFavBtn.addEventListener("click", addFavPreview);
@@ -164,7 +164,6 @@ function addFavPreview() {
 function addFav(color) {
   if (!favColorList.includes(color)) {
     const sliding = document.createElement("ion-item-sliding");
-    // sliding.setAttribute("onclick", `sendStaticColor("${color}")`);
 
     const options = document.createElement("ion-item-options");
     options.side = "end";
@@ -209,11 +208,11 @@ function loadFav() {
   }
 }
 
-function removeFavColor(item, color){
-  favColorList.splice(favColorList.indexOf(color),1);
+function removeFavColor(item, color) {
+  const index = favColorList.indexOf(color);
+  favColorList.splice(index, 1);
   localStorage.setObj("favColorList", favColorList);
   item.parentElement.parentElement.remove();
-
 }
 
 // animation
