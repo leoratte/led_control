@@ -1,8 +1,12 @@
+import logging
+
 from animation import AnimationHandler
+from util import hex2rgb
 
 
 class Led:
     def __init__(self, name, pizw, pins):
+        self.logger = logging.getLogger(__name__)
         self.name = name
         self.pizw = pizw
         self.animation = AnimationHandler(self)
@@ -15,10 +19,26 @@ class Led:
     def get_color(self):
         return self.color
 
-    def set_static_color(self, color):
-        self.animation.stop()
-        self.color = color
-        self.set_color(color)
+    def set(self, data):
+        if "type" in data:
+            t = data.pop("type")
+            if t == "static":
+                self.static_color(data)
+            elif t == "animation":
+                self.animation.set_data(data)
+            else:
+                self.logger.warning("Unknown type '{]'".format(t))
+        else:
+            self.logger.warning("Type not set")
+
+    def static_color(self, data):
+        if "color" in data:
+            color = hex2rgb(data["color"])
+            self.animation.stop()
+            self.set_color(color)
+            self.logger.info("Led {} set to static {}".format(self.name, data["color"]))
+        else:
+            self.logger.warning("No static color set")
 
     def set_color(self, color):
         self.color = color
@@ -28,10 +48,5 @@ class Led:
         for i in range(3):
             self.pizw.set_PWM_dutycycle(self.pins[i], color[i])
 
-    def start_animation(self, animation_type, animation_speed):
-        if animation_type == "stop":
-            self.animation.stop()
-        else:
-            self.animation.set_animation_type(animation_type)
-            self.animation.set_animation_speed(animation_speed)
-            self.animation.start()
+    def animation(self, data):
+        self.animation.set_data(data)
