@@ -1,22 +1,38 @@
+import logging
 import threading
 import time
-import colorsys
-import abc
-from abc import ABC
 
-from random import randint
+from animations import *
 
 
-class AnimationHandler(object):
+class AnimationHandler:
     def __init__(self, led):
         self.led = led
+        self.logger = logging.getLogger(__name__)
         self.animationSpeed = 1
         self.animationRunning = False
         self.animationType = AnimationRandom()
         self.thread = threading.Thread(target=self.animation)
 
-    def set_animation_type(self, animation_type):
-        if animation_type == "breathing":
+    def set_data(self, data):
+        speed = 1
+        if "animationSpeed" in data:
+            speed = data.pop("animationSpeed")
+        else:
+            self.logger.warning("Animation speed defaulted to 1")
+        self.set_animation_speed(speed)
+        if "animationType" in data:
+            animation_type = data["animationType"]
+            self.set_animation_type(animation_type, data)
+            self.logger.info("Led {} set to animation {}".format(self.led.get_name(), animation_type))
+        else:
+            self.logger.warning("No animation type was set")
+
+    def set_animation_type(self, animation_type, data):
+        if animation_type == "stop":
+            self.stop()
+            return
+        elif animation_type == "breathing":
             self.animationType = AnimationBreathing(self.led.get_color())
         elif animation_type == "random":
             self.animationType = AnimationRandom()
@@ -26,6 +42,12 @@ class AnimationHandler(object):
             self.animationType = AnimationColorCircleBreathing()
         elif animation_type == "randombreathing":
             self.animationType = AnimationRandomBreathing()
+        elif animation_type == "custom":
+            self.animationType = AnimationCustom(data)
+        else:
+            self.logger.warning("Unknown animation type '{}'".format(animation_type))
+            return
+        self.start()
 
     def set_animation_speed(self, animation_speed):
         self.animationSpeed = animation_speed
@@ -50,116 +72,3 @@ class AnimationHandler(object):
             time.sleep(self.animationType.get_delay() * 1 / self.animationSpeed)
 
 
-class Animation(abc.ABC):
-    @staticmethod
-    @abc.abstractmethod
-    def next_color():
-        pass
-
-    @staticmethod
-    @abc.abstractmethod
-    def get_delay():
-        pass
-
-
-class AnimationAbstractBreathing(Animation, ABC):
-    def __init__(self):
-        self.down = True
-        self.percentage = 1
-
-    def breath(self):
-        if self.down:
-            if self.percentage > 0:
-                self.percentage -= 0.01
-            else:
-                self.down = False
-                self.percentage += 0.01
-        else:
-            if self.percentage < 1:
-                self.percentage += 0.01
-            else:
-                self.down = True
-                self.percentage -= 0.01
-        self.percentage = round(self.percentage, 2)
-
-
-class AnimationRandom(Animation):
-    @staticmethod
-    def next_color():
-        return randint(0, 255), randint(0, 255), randint(0, 255)
-
-    @staticmethod
-    def get_delay():
-        return 0.5
-
-
-class AnimationBreathing(AnimationAbstractBreathing):
-    def __init__(self, color):
-        super().__init__()
-        multiplier = 255 / max(color)
-        self.color = (round(multiplier * color[0]),
-                      round(multiplier * color[1]),
-                      round(multiplier * color[2]))
-
-    def next_color(self):
-        self.breath()
-        return (round(self.percentage * self.color[0]),
-                round(self.percentage * self.color[1]),
-                round(self.percentage * self.color[2]))
-
-    @staticmethod
-    def get_delay():
-        return 0.05
-
-
-class AnimationColorCircle(Animation):
-    def __init__(self):
-        self.hue = 0
-
-    def next_color(self):
-        self.hue = (self.hue + 1) % 360
-        color = colorsys.hsv_to_rgb(self.hue / 360, 1, 1)
-        return (round(255 * color[0]),
-                round(255 * color[1]),
-                round(255 * color[2]))
-
-    @staticmethod
-    def get_delay():
-        return 0.05
-
-
-class AnimationColorCircleBreathing(AnimationAbstractBreathing):
-    def __init__(self):
-        super().__init__()
-        self.hue = 0
-
-    def next_color(self):
-        self.breath()
-        if self.percentage <= 0:
-            self.hue = (self.hue + 50) % 360
-        color = colorsys.hsv_to_rgb(self.hue / 360, 1, 1)
-        return (round(self.percentage * 255 * color[0]),
-                round(self.percentage * 255 * color[1]),
-                round(self.percentage * 255 * color[2]))
-
-    @staticmethod
-    def get_delay():
-        return 0.05
-
-
-class AnimationRandomBreathing(AnimationAbstractBreathing):
-    def __init__(self):
-        super().__init__()
-        self.color = (4 * randint(0, 63), 4 * randint(0, 63), 4 * randint(0, 63))
-
-    def next_color(self):
-        self.breath()
-        if self.percentage <= 0:
-            self.color = (4 * randint(0, 63), 4 * randint(0, 63), 4 * randint(0, 63))
-        return (round(self.percentage * self.color[0]),
-                round(self.percentage * self.color[1]),
-                round(self.percentage * self.color[2]))
-
-    @staticmethod
-    def get_delay():
-        return 0.05
