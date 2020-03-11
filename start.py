@@ -20,6 +20,9 @@ async def consumer_handler(websocket, path):
             controller.parse(data)
         except ValueError:
             logger.warning("Message could not be parsed")
+        except Exception as e:
+            logger.warning(e.args)
+
 
 __name__ = "start"
 # logging

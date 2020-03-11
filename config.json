@@ -1,6 +1,6 @@
 {"leds":[
-	{"name":"bed","pins":[27,17,22]},
-	{"name":"desk","pins":[14,15,18]}
+	{"name":"bed","pins":[18,15,14]},
+	{"name":"desk","pins":[17,27,22]}
 	],
  "animations":["random","stop","colorcircle","breathing","randombreathing","colorcirclebreathing"]
 }
