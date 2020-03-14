@@ -1,6 +1,6 @@
 #!/bin/bash
-apt install pigpio nginx python3
-pip3 install websockets
+apt install pigpio nginx python3 python3-pip -y
+pip3 install websockets, pigpio
 rm pigpio.py
 systemctl enable pigpiod
 systemctl start pigpiod
