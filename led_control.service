@@ -1,0 +1,11 @@
+[Unit]
+Description=led_control
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pi
+ExecStart=python3 /opt/led_control/start.py
