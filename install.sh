@@ -7,6 +7,7 @@ cp -t /opt/led_control led.py start.py animation.py control.py util.py config.js
 cp led_control.service /etc/systemd/system
 systemctl enable pigpiod
 systemctl start pigpiod
-service led_control start
+systemctl enable led_control
+systemctl start led_control
 cp html/* /var/www/html
 service nginx start
