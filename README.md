@@ -6,5 +6,5 @@ cd led_control
 ````
 change config.json to your corresponding pins
 ````
-sudo sh install.py
+sudo sh install.sh
 ````
