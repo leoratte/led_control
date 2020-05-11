@@ -21,7 +21,7 @@ class Led:
 
     def set(self, data):
         if "type" in data:
-            t = data.pop("type")
+            t = data.get("type")
             if t == "static":
                 self.static_color(data)
             elif t == "animation":
