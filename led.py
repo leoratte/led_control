@@ -5,13 +5,18 @@ from util import hex2rgb
 
 
 class Led:
-    def __init__(self, name, pizw, pins):
+    def __init__(self, led_id, name, rasp_pi, pins):
         self.logger = logging.getLogger(__name__)
+        self.id = led_id
         self.name = name
-        self.pizw = pizw
+        self.rasp_pi = rasp_pi
         self.animation = AnimationHandler(self)
         self.color = (0, 0, 0)
         self.pins = pins
+        self.set_color((0, 0, 0))
+
+    def get_id(self):
+        return self.id
 
     def get_name(self):
         return self.name
@@ -46,7 +51,7 @@ class Led:
             if color[i] > 255 or color[i] < 0:
                 raise Exception
         for i in range(3):
-            self.pizw.set_PWM_dutycycle(self.pins[i], color[i])
+            self.rasp_pi.set_PWM_dutycycle(self.pins[i], color[i])
 
     def animation(self, data):
         self.animation.set_data(data)
