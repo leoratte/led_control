@@ -24,7 +24,7 @@ class Controller:
         if "id" in data:
             self.logger.info("Message parsed")
             led_id = data.pop("id")
-            if led_id == "all":
+            if led_id == 0:
                 for led in self.led_list.values():
                     self.set_led(led, data)
             elif led_id in self.led_list:
