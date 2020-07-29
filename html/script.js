@@ -141,7 +141,7 @@ function applyPreview() {
 function sendStaticColor(color) {
   ws.send(
     JSON.stringify({
-      name: led,
+      id: led,
       type: "static",
       color: color.substring(1, 7)
     })
@@ -247,7 +247,7 @@ function sendAnimation(animationType) {
   const speed = speedInput.value;
   ws.send(
     JSON.stringify({
-      name: led,
+      id: led,
       type: "animation",
       animationType: animationType,
       animationSpeed: speed
