@@ -1,16 +1,15 @@
 #!/bin/bash
 use_webpage=false
-while true; do
-    read -p "Do you want to enable a local webpage(y/N)?" yn
-    case $yn in
-        [Yy]* ) use_webpage=true; break;;
-        * ) use_webpage=false;;
-    esac
-done
+read -p "Do you want to enable a local webpage(y/N)?" yn
+case $yn in
+    [Yy]* ) use_webpage=true;;
+    * ) use_webpage=false;;
+esac
+
 apt install pigpio python3 python3-pip -y
-if use_webpage
+if $use_webpage
   then
-    apt install nginx
+    apt install nginx -y
 fi
 pip3 install websockets
 pip3 install pigpio
@@ -21,7 +20,7 @@ systemctl enable pigpiod
 systemctl start pigpiod
 systemctl enable led_control
 systemctl start led_control
-if use_webpage
+if $use_webpage
   then
     cp html/* /var/www/html
     service nginx start
