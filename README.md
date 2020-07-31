@@ -6,5 +6,7 @@ cd led_control
 ````
 change config.json to your corresponding pins
 ````
-sudo sh install.sh
+sudo bash install.sh
 ````
+## control app
+https://github.com/leoratte/led_control_app
