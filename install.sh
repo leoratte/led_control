@@ -22,6 +22,10 @@ systemctl enable led_control
 systemctl start led_control
 if $use_webpage
   then
-    cp html/* /var/www/html
-    service nginx start
+    wget https://github.com/leoratte/led_control_app/releases/download/v0.2.0-alpha/www.zip
+    mkdir www
+    unzip -d www www.zip
+    cp www/* /var/www/html
+    systemctl enable nginx
+    systemctl start nginx
 fi
