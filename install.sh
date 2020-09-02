@@ -25,7 +25,7 @@ if $use_webpage
     wget https://github.com/leoratte/led_control_app/releases/download/v0.2.0-alpha/www.zip
     mkdir www
     unzip -d www www.zip
-    cp www/* /var/www/html
+    cp -r www/* /var/www/html
     systemctl enable nginx
     systemctl start nginx
 fi
