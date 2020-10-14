@@ -2,19 +2,27 @@ import pigpio
 import json
 import logging
 
-from led import Led
+from led import AnalogLed, DigitalLed
 
 
 class Controller:
     def __init__(self, config_path):
         self.logger = logging.getLogger(__name__)
+        # read config file
         with open(config_path, "r") as f:
             config = json.load(f)
             f.close()
         self.led_list = dict()
+        # analog leds
         rasp_pi = pigpio.pi()
-        for led_group in config.get("leds"):
-            self.led_list[led_group.get("id")] = Led(led_group.get("id"), led_group.get("name"), rasp_pi, led_group.get("pins"))
+        for led_group in config.get("leds").get("analog"):
+            self.led_list[led_group.get("id")] = AnalogLed(led_group.get("id"), led_group.get("name"), rasp_pi,
+                                                           led_group.get("pins"))
+        # digital leds
+        for led_group in config.get("leds").get("digital"):
+            self.led_list[led_group.get("id")] = DigitalLed(led_group.get("id"), led_group.get("name"),
+                                                            led_group.get("pin"), led_group.get("led_count"))
+        # create web_config
         self.web_config = dict()
         self.web_config["leds"] = list(self.led_list.keys())
         self.web_config["animations"] = config["animations"]

@@ -13,6 +13,7 @@ if $use_webpage
 fi
 pip3 install websockets
 pip3 install pigpio
+pip3 install rpi_ws281x
 mkdir /opt/led_control
 cp -t /opt/led_control led.py start.py animation.py control.py util.py config.json animations.py
 cp led_control.service /etc/systemd/system

@@ -1,7 +1,11 @@
-{"leds":[
-	{"id":1,"name":"led1","pins":[2,3,4]},
-	{"id":2,"name":"led2","pins":[17,27,22]},
-	{"id":3,"name":"led3","pins":[18,15,14]}
+{"leds": {
+	"analog":[
+		{"id":1,"name":"led1","pins":[2,3,4]},
+		{"id":2,"name":"led2","pins":[27,17,22]}
 	],
- 	"animations":["random","stop","colorcircle","breathing","randombreathing","colorcirclebreathing"]
+	"digital":[
+		{"id": 3,"name": "led3", "pin": 18, "led_count": 50}
+	]
+	},
+"animations":["random","stop","colorcircle","breathing","randombreathing","colorcirclebreathing"]
 }
